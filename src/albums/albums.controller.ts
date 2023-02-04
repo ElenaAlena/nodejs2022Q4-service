@@ -57,9 +57,9 @@ export class AlbumsController {
   ): Promise<Album> {
     if (
       !validate(id) &&
-      updateAlbumDto.name &&
-      updateAlbumDto.year &&
-      typeof updateAlbumDto.name === 'string'
+      !updateAlbumDto.name &&
+      !updateAlbumDto.year &&
+      typeof updateAlbumDto.name !== 'string'
     ) {
       throw new HttpException('Album id is not valid', HttpStatus.BAD_REQUEST);
     }
@@ -68,7 +68,7 @@ export class AlbumsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string): Promise<boolean> {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     if (!validate(id)) {
       throw new HttpException('Album id is not valid', HttpStatus.BAD_REQUEST);
     }
