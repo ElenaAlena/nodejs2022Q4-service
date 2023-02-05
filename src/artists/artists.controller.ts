@@ -11,7 +11,6 @@ import {
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
-import { validate } from 'uuid';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -36,11 +35,8 @@ export class ArtistsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
-    if (!validate(id)) {
-      throw new HttpException('Artist id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    const artist = this.artistsService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
+    const artist = await this.artistsService.findOne(id);
     if (!artist) {
       throw new HttpException(
         'The artist with such id is not exist',
@@ -56,11 +52,10 @@ export class ArtistsController {
     @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<Artist> {
     if (
-      !validate(id) &&
-      !updateArtistDto.name &&
-      typeof updateArtistDto.name !== 'string'
+      (updateArtistDto.name && typeof updateArtistDto.name !== 'string') ||
+      (updateArtistDto.grammy && typeof updateArtistDto.grammy !== 'boolean')
     ) {
-      throw new HttpException('Artist id is not valid', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Artist is not valid', HttpStatus.BAD_REQUEST);
     }
     const artist = this.artistsService.update(id, updateArtistDto);
     return artist;
@@ -68,11 +63,8 @@ export class ArtistsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    if (!validate(id)) {
-      throw new HttpException('Artist id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    const result = this.artistsService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const result = await this.artistsService.remove(id);
     if (result) {
       throw new HttpException(
         'This artist was successfullly deleted',
