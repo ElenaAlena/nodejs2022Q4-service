@@ -5,4 +5,4 @@ import { RepositoryService } from './repositoty.service';
   providers: [RepositoryService],
   exports: [RepositoryService],
 })
-export class RepositotyModule {}
+export class RepositoryModule {}

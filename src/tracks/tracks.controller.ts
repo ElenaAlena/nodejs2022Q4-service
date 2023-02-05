@@ -10,7 +10,6 @@ import {
   ParseUUIDPipe,
   Put,
 } from '@nestjs/common';
-import { validate } from 'uuid';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';

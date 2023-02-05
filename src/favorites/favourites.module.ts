@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { FavouritesService } from './favourites.service';
 import { FavouritesController } from './favourites.controller';
-import { RepositoryService } from 'src/repository/repositoty.service';
+import { RepositoryModule } from 'src/repository/repository.module';
 
 @Module({
   controllers: [FavouritesController],
   providers: [FavouritesService],
-  imports: [RepositoryService],
+  imports: [RepositoryModule],
 })
 export class FavouritesModule {}

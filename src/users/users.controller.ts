@@ -14,7 +14,6 @@ import {
   HttpException,
 } from '@nestjs/common';
 
-import { validate } from 'uuid';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './interfaces/user.interface';
@@ -48,10 +47,9 @@ export class UserController {
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<User | User[]> {
-    if (!validate(id)) {
-      throw new HttpException('User id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    return this.userService.find(id);
+    const user = this.userService.find(id);
+    if (user) return new UserEntity(user as User);
+    throw new HttpException('This user does not exist', HttpStatus.NOT_FOUND);
   }
 
   @Put(':id')
@@ -59,20 +57,14 @@ export class UserController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUser: UpdateUserPasswordDto,
   ): Promise<User> {
-    if (!validate(id)) {
-      throw new HttpException('User id is not valid', HttpStatus.BAD_REQUEST);
-    }
     const userUpdated = await this.userService.update(id, updateUser);
     return new UserEntity(userUpdated);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    if (!validate(id)) {
-      throw new HttpException('User id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    const userToDelete = this.userService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const userToDelete = await this.userService.remove(id);
     if (!userToDelete) {
       throw new HttpException('User is not exist', HttpStatus.NOT_FOUND);
     }
