@@ -37,7 +37,7 @@ export class FavoritesController {
   }
 
   @Post('/track/:id')
-  addTrackToFavs(@Param('id', ParseUUIDPipe) id: string) {
+  addTrackToFavs(@Param('id', new ParseUUIDPipe()) id: string) {
     const track = this.repository.tracks.find((el) => el.id === id);
     if (track) {
       this.favoritesService.addTrack(id);
@@ -53,7 +53,7 @@ export class FavoritesController {
   }
 
   @Post('/album/:id')
-  addAlbumToFavs(@Param('id', ParseUUIDPipe) id: string) {
+  addAlbumToFavs(@Param('id', new ParseUUIDPipe()) id: string) {
     const album = this.repository.albums.find((el) => el.id === id);
     if (album) {
       this.favoritesService.addAlbum(id);
@@ -69,7 +69,7 @@ export class FavoritesController {
   }
 
   @Post('/artist/:id')
-  addArtistToFavs(@Param('id', ParseUUIDPipe) id: string) {
+  addArtistToFavs(@Param('id', new ParseUUIDPipe()) id: string) {
     const artist = this.repository.artists.find((el) => el.id === id);
     if (artist) {
       this.favoritesService.addArtist(id);
@@ -85,7 +85,7 @@ export class FavoritesController {
   }
 
   @Delete('/track/:id')
-  deleteTrackFromFavs(@Param('id', ParseUUIDPipe) id: string) {
+  deleteTrackFromFavs(@Param('id', new ParseUUIDPipe()) id: string) {
     const track = this.repository.tracks.find((el) => el.id === id);
     if (track) {
       this.favoritesService.removeTrack(id);
@@ -101,7 +101,7 @@ export class FavoritesController {
   }
 
   @Delete('/album/:id')
-  deleteAlbumFromFavs(@Param('id', ParseUUIDPipe) id: string) {
+  deleteAlbumFromFavs(@Param('id', new ParseUUIDPipe()) id: string) {
     const album = this.repository.albums.find((el) => el.id === id);
     if (album) {
       this.favoritesService.removeAlbum(id);
@@ -117,7 +117,7 @@ export class FavoritesController {
   }
 
   @Delete('/artist/:id')
-  deleteArtistFromFavs(@Param('id', ParseUUIDPipe) id: string) {
+  deleteArtistFromFavs(@Param('id', new ParseUUIDPipe()) id: string) {
     const artist = this.repository.artists.find((el) => el.id === id);
     if (artist) {
       this.favoritesService.removeArtist(id);

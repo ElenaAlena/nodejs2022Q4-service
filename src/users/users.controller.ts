@@ -45,7 +45,7 @@ export class UserController {
 
   @Get(':id')
   async findOne(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<User | User[]> {
     const user = this.userService.find(id);
     if (user) return new UserEntity(user as User);
@@ -54,7 +54,7 @@ export class UserController {
 
   @Put(':id')
   async update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUser: UpdateUserPasswordDto,
   ): Promise<User> {
     const userUpdated = await this.userService.update(id, updateUser);
@@ -63,7 +63,7 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const userToDelete = await this.userService.remove(id);
     if (!userToDelete) {
       throw new HttpException('User is not exist', HttpStatus.NOT_FOUND);

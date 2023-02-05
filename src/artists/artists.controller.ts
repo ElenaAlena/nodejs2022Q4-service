@@ -35,7 +35,7 @@ export class ArtistsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Artist> {
     const artist = await this.artistsService.findOne(id);
     if (!artist) {
       throw new HttpException(
@@ -48,7 +48,7 @@ export class ArtistsController {
 
   @Put(':id')
   update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<Artist> {
     if (
@@ -63,7 +63,7 @@ export class ArtistsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = await this.artistsService.remove(id);
     if (result) {
       throw new HttpException(

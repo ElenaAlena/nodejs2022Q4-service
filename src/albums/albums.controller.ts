@@ -35,7 +35,7 @@ export class AlbumsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Album> {
     const album = await this.albumsService.findOne(id);
     if (!album) {
       throw new HttpException(
@@ -48,7 +48,7 @@ export class AlbumsController {
 
   @Put(':id')
   update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
     if (
@@ -63,7 +63,7 @@ export class AlbumsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const isAlbumDel = await this.albumsService.remove(id);
     if (isAlbumDel) {
       throw new HttpException(
