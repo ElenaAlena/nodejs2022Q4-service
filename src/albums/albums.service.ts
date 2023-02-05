@@ -10,6 +10,15 @@ export class AlbumsService {
   constructor(private repository: RepositoryService) {}
 
   async create(createAlbumDto: CreateAlbumDto): Promise<Album> {
+    const { artistId } = createAlbumDto;
+    if (artistId) {
+      const isArtist = this.repository.artists.find(
+        (artist) => artist.id === artistId,
+      );
+      if (!isArtist) {
+        throw new HttpException('Body is not correct', HttpStatus.BAD_REQUEST);
+      }
+    }
     const newAlbum = new AlbumEntity(createAlbumDto);
     this.repository.addAlbum(newAlbum);
     return newAlbum;
@@ -30,6 +39,15 @@ export class AlbumsService {
         'This album does not exist',
         HttpStatus.NOT_FOUND,
       );
+    const { artistId } = updateAlbumDto;
+    if (artistId) {
+      const isArtist = this.repository.artists.find(
+        (artist) => artist.id === artistId,
+      );
+      if (!isArtist) {
+        throw new HttpException('Body is not correct', HttpStatus.BAD_REQUEST);
+      }
+    }
     const updatedAlbum = { ...albumForUpdate, ...updateAlbumDto };
     this.repository.updateAlbum(id, updatedAlbum);
     return updatedAlbum;

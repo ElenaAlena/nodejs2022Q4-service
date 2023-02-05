@@ -11,7 +11,6 @@ import {
   HttpStatus,
   Put,
 } from '@nestjs/common';
-import { validate } from 'uuid';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -36,11 +35,8 @@ export class AlbumsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
-    if (!validate(id)) {
-      throw new HttpException('Album id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    const album = this.albumsService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
+    const album = await this.albumsService.findOne(id);
     if (!album) {
       throw new HttpException(
         'Album with such id does not exist',
@@ -56,7 +52,6 @@ export class AlbumsController {
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
     if (
-      !validate(id) &&
       !updateAlbumDto.name &&
       !updateAlbumDto.year &&
       typeof updateAlbumDto.name !== 'string'
@@ -68,11 +63,8 @@ export class AlbumsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    if (!validate(id)) {
-      throw new HttpException('Album id is not valid', HttpStatus.BAD_REQUEST);
-    }
-    const isAlbumDel = this.albumsService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const isAlbumDel = await this.albumsService.remove(id);
     if (isAlbumDel) {
       throw new HttpException(
         'This album was successfullly deleted',

@@ -28,10 +28,8 @@ export class RepositoryService {
     this.artists.push(artist);
   }
 
-  addAlbum(createAlbumDto: CreateAlbumDto): Album {
-    const newAlbum = new AlbumEntity(createAlbumDto);
-    this.albums.push(newAlbum);
-    return newAlbum;
+  addAlbum(album: Album) {
+    this.albums.push(album);
   }
 
   deleteTrack(id: string) {
