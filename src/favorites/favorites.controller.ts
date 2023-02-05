@@ -5,24 +5,24 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
-import { validate } from 'uuid';
 import { RepositoryService } from 'src/repository/repositoty.service';
-import { FavouritesService } from './favourites.service';
-import { FavoritesResponse } from './interfaces/favourites.interfaces';
+import { FavoritesService } from './favorites.service';
+import { FavoritesResponse } from './interfaces/favorites.interfaces';
 
 @Controller('favs')
-export class FavouritesController {
+export class FavoritesController {
   constructor(
-    private readonly favouritesService: FavouritesService,
+    private readonly favoritesService: FavoritesService,
     private repository: RepositoryService,
   ) {}
 
   getSuccessAnswer(text, type = 1) {
     return type === 1
-      ? `The ${text} was successfully added to favourites`
-      : `The ${text} was successfully removed from favourites`;
+      ? `The ${text} was successfully added to favorites`
+      : `The ${text} was successfully removed from favorites`;
   }
 
   getErrorAnswer(text, type = 1) {
@@ -33,20 +33,14 @@ export class FavouritesController {
 
   @Get()
   getAll(): Promise<FavoritesResponse> {
-    return this.favouritesService.getAll();
+    return this.favoritesService.getAll();
   }
 
   @Post('/track/:id')
-  addTrackToFavs(@Param('id') id: string) {
-    if (!validate(id)) {
-      throw new HttpException(
-        this.getErrorAnswer('track', 1),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  addTrackToFavs(@Param('id', ParseUUIDPipe) id: string) {
     const track = this.repository.tracks.find((el) => el.id === id);
     if (track) {
-      this.favouritesService.addTrack(id);
+      this.favoritesService.addTrack(id);
       throw new HttpException(
         this.getSuccessAnswer('track'),
         HttpStatus.CREATED,
@@ -59,16 +53,10 @@ export class FavouritesController {
   }
 
   @Post('/album/:id')
-  addAlbumToFavs(@Param('id') id: string) {
-    if (!validate(id)) {
-      throw new HttpException(
-        this.getErrorAnswer('album', 1),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  addAlbumToFavs(@Param('id', ParseUUIDPipe) id: string) {
     const album = this.repository.albums.find((el) => el.id === id);
     if (album) {
-      this.favouritesService.addAlbum(id);
+      this.favoritesService.addAlbum(id);
       throw new HttpException(
         this.getSuccessAnswer('album'),
         HttpStatus.CREATED,
@@ -81,16 +69,10 @@ export class FavouritesController {
   }
 
   @Post('/artist/:id')
-  addArtistToFavs(@Param('id') id: string) {
-    if (!validate(id)) {
-      throw new HttpException(
-        this.getErrorAnswer('artist', 1),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  addArtistToFavs(@Param('id', ParseUUIDPipe) id: string) {
     const artist = this.repository.artists.find((el) => el.id === id);
     if (artist) {
-      this.favouritesService.addArtist(id);
+      this.favoritesService.addArtist(id);
       throw new HttpException(
         this.getSuccessAnswer('artist'),
         HttpStatus.CREATED,
@@ -103,39 +85,26 @@ export class FavouritesController {
   }
 
   @Delete('/track/:id')
-  deleteTrackFromFavs(@Param('id') id: string) {
-    if (!validate(id)) {
-      throw new HttpException(
-        this.getErrorAnswer('track', 1),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  deleteTrackFromFavs(@Param('id', ParseUUIDPipe) id: string) {
     const track = this.repository.tracks.find((el) => el.id === id);
     if (track) {
-      this.favouritesService.removeTrack(id);
+      this.favoritesService.removeTrack(id);
       throw new HttpException(
         this.getSuccessAnswer('track', 0),
         HttpStatus.NO_CONTENT,
       );
     }
     throw new HttpException(
-      this.getErrorAnswer('artist', 1),
+      this.getErrorAnswer('track', 1),
       HttpStatus.NOT_FOUND,
     );
   }
 
   @Delete('/album/:id')
-  deleteAlbumFromFavs(@Param('id') id: string) {
-    if (!validate(id)) {
-      throw new HttpException(
-        this.getErrorAnswer('track', 1),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  deleteAlbumFromFavs(@Param('id', ParseUUIDPipe) id: string) {
     const album = this.repository.albums.find((el) => el.id === id);
     if (album) {
-      this.favouritesService.removeAlbum(id);
+      this.favoritesService.removeAlbum(id);
       throw new HttpException(
         this.getSuccessAnswer('album', 0),
         HttpStatus.NO_CONTENT,
@@ -148,16 +117,10 @@ export class FavouritesController {
   }
 
   @Delete('/artist/:id')
-  deleteArtistFromFavs(@Param('id') id: string) {
-    if (!validate(id)) {
-      throw new HttpException(
-        this.getErrorAnswer('track', 1),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  deleteArtistFromFavs(@Param('id', ParseUUIDPipe) id: string) {
     const artist = this.repository.artists.find((el) => el.id === id);
     if (artist) {
-      this.favouritesService.removeArtist(id);
+      this.favoritesService.removeArtist(id);
       throw new HttpException(
         this.getSuccessAnswer('artist', 0),
         HttpStatus.NO_CONTENT,

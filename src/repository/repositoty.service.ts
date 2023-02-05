@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Artist } from 'src/artists/interfaces/artist.interface';
-import { CreateAlbumDto } from 'src/albums/dto/create-album.dto';
-import { AlbumEntity } from 'src/albums/entities/album.entity';
 import { Album } from 'src/albums/interfaces/album.interface';
 import {
   Favorites,
   FavoritesResponse,
-} from 'src/favorites/interfaces/favourites.interfaces';
+} from 'src/favorites/interfaces/favorites.interfaces';
 import { Track } from 'src/tracks/interfaces/track.interface';
 
 @Injectable()
@@ -76,37 +74,37 @@ export class RepositoryService {
     this.albums = this.albums.map((el) => (el.id === id ? updatedAlbum : el));
   }
 
-  deleteArtistFromFavourites(artistId: string) {
+  deleteArtistFromFavorites(artistId: string) {
     this.favourites.artists = this.favourites.artists.filter(
       (el) => el !== artistId,
     );
   }
 
-  deleteAlbumFromFavourites(albumId: string) {
+  deleteAlbumFromFavorites(albumId: string) {
     this.favourites.albums = this.favourites.albums.filter(
       (el) => el !== albumId,
     );
   }
 
-  deleteTrackFromFavourites(trackId: string) {
+  deleteTrackFromFavorites(trackId: string) {
     this.favourites.tracks = this.favourites.tracks.filter(
       (el) => el !== trackId,
     );
   }
 
-  addTrackToFavourites(trackId: string) {
+  addTrackToFavorites(trackId: string) {
     this.favourites.tracks.push(trackId);
   }
 
-  addAlbumToFavourites(albumId: string) {
+  addAlbumToFavorites(albumId: string) {
     this.favourites.albums.push(albumId);
   }
 
-  addArtistToFavourites(artistId: string) {
+  addArtistToFavorites(artistId: string) {
     this.favourites.artists.push(artistId);
   }
 
-  getFavourites(): FavoritesResponse {
+  getFavorites(): FavoritesResponse {
     return {
       artists: this.favourites.artists.map((el) =>
         this.artists.find((artist) => artist.id === el),

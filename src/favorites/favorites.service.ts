@@ -1,36 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { RepositoryService } from 'src/repository/repositoty.service';
-import { FavoritesResponse } from './interfaces/favourites.interfaces';
+import { FavoritesResponse } from './interfaces/favorites.interfaces';
 
 @Injectable()
-export class FavouritesService {
+export class FavoritesService {
   constructor(private repository: RepositoryService) {}
 
   async getAll(): Promise<FavoritesResponse> {
-    return this.repository.getFavourites();
+    return this.repository.getFavorites();
   }
 
   async addTrack(id: string) {
-    this.repository.addTrackToFavourites(id);
+    this.repository.addTrackToFavorites(id);
   }
 
   async removeTrack(id: string) {
-    this.repository.deleteTrackFromFavourites(id);
+    this.repository.deleteTrackFromFavorites(id);
   }
 
   async addAlbum(id: string) {
-    this.repository.addAlbumToFavourites(id);
+    this.repository.addAlbumToFavorites(id);
   }
 
   async removeAlbum(id: string) {
-    this.repository.deleteAlbumFromFavourites(id);
+    this.repository.deleteAlbumFromFavorites(id);
   }
 
   async addArtist(id: string) {
-    this.repository.addArtistToFavourites(id);
+    this.repository.addArtistToFavorites(id);
   }
 
   async removeArtist(id: string) {
-    this.repository.deleteArtistFromFavourites(id);
+    this.repository.deleteArtistFromFavorites(id);
   }
 }

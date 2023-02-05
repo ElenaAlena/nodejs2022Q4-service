@@ -56,18 +56,14 @@ export class TracksController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    const isSuccess = this.tracksService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const isSuccess = await this.tracksService.remove(id);
     if (!isSuccess) {
       throw new HttpException(
         'This track does not exist',
         HttpStatus.NOT_FOUND,
       );
-    } else {
-      throw new HttpException(
-        'This track was successfullly deleted',
-        HttpStatus.NO_CONTENT,
-      );
     }
+    return true;
   }
 }
