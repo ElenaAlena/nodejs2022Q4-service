@@ -34,8 +34,8 @@ export class TracksController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Track> {
-    const track = this.tracksService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Track> {
+    const track = await this.tracksService.findOne(id);
     if (track) return track;
     throw new HttpException(
       'The track with such id is not exist',
@@ -45,7 +45,7 @@ export class TracksController {
 
   @Put(':id')
   update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
     if (updateTrackDto.name !== null && updateTrackDto.duration !== null) {
@@ -56,7 +56,7 @@ export class TracksController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const isSuccess = await this.tracksService.remove(id);
     if (!isSuccess) {
       throw new HttpException(
