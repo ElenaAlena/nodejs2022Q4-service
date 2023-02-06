@@ -1,5 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty, IsUUID } from 'class-validator';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { v4 } from 'uuid';
 
 export class UserEntity {
   @IsUUID()
@@ -12,7 +14,12 @@ export class UserEntity {
   @Exclude()
   password: string;
 
-  constructor(user: Partial<UserEntity>) {
-    Object.assign(this, user);
+  constructor({ login, password }: CreateUserDto) {
+    this.id = v4();
+    this.login = login;
+    this.password = password;
+    this.version = 1;
+    this.createdAt = Date.now();
+    this.updatedAt = Date.now();
   }
 }

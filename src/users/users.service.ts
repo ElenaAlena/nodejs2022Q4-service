@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common/enums';
 import { HttpException } from '@nestjs/common/exceptions';
-import { v4 as uuid } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+import { UserEntity } from './entities/user.entity';
 import User from './interfaces/user.interface';
 
 @Injectable()
@@ -11,14 +11,7 @@ export class UserService {
   private _users: User[] = [];
 
   async create(user: CreateUserDto): Promise<User> {
-    const timestamp = Date.now();
-    const newUser: User = {
-      ...user,
-      id: uuid(),
-      version: 1,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-    };
+    const newUser: UserEntity = new UserEntity(user);
     this._users.push(newUser);
     return newUser;
   }
@@ -52,11 +45,11 @@ export class UserService {
   }
 
   async remove(id: string): Promise<User | boolean> {
-    const user = !this.find(id);
+    const user = !!this.find(id);
     if (user) {
       this._users = this._users.filter((item) => item.id !== id);
-      return user;
+      return true;
     }
-    return !!user;
+    return false;
   }
 }

@@ -51,12 +51,6 @@ export class ArtistsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<Artist> {
-    if (
-      (updateArtistDto.name && typeof updateArtistDto.name !== 'string') ||
-      (updateArtistDto.grammy && typeof updateArtistDto.grammy !== 'boolean')
-    ) {
-      throw new HttpException('Artist is not valid', HttpStatus.BAD_REQUEST);
-    }
     const artist = this.artistsService.update(id, updateArtistDto);
     return artist;
   }

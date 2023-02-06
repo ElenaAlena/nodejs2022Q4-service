@@ -29,7 +29,7 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.login && createUserDto.password) {
       const newUser = await this.userService.create(createUserDto);
-      return new UserEntity(newUser);
+      return newUser;
     }
     throw new HttpException(
       'Login or password is incorrect',
@@ -47,7 +47,7 @@ export class UserController {
   async findOne(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<User | User[]> {
-    const user = this.userService.find(id);
+    const user = await this.userService.find(id);
     if (user) return new UserEntity(user as User);
     throw new HttpException('This user does not exist', HttpStatus.NOT_FOUND);
   }
@@ -58,7 +58,7 @@ export class UserController {
     @Body() updateUser: UpdateUserPasswordDto,
   ): Promise<User> {
     const userUpdated = await this.userService.update(id, updateUser);
-    return new UserEntity(userUpdated);
+    return userUpdated;
   }
 
   @Delete(':id')
