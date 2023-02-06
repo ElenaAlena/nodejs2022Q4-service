@@ -27,6 +27,8 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+Also you can import OpenAPI file from doc folder to https://editor-next.swagger.io/ to see the api tree and to have an ability to check it.
+
 ## Testing
 
 After application running open new terminal and enter:
