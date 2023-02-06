@@ -22,10 +22,7 @@ export class TracksController {
 
   @Post()
   create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
-    if (createTrackDto.duration && createTrackDto.name) {
-      return this.tracksService.create(createTrackDto);
-    }
-    throw new HttpException('Body is incorrect', HttpStatus.BAD_REQUEST);
+    return this.tracksService.create(createTrackDto);
   }
 
   @Get()
@@ -48,10 +45,7 @@ export class TracksController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
-    if (updateTrackDto.name !== null && updateTrackDto.duration !== null) {
-      return this.tracksService.update(id, updateTrackDto);
-    }
-    throw new HttpException('Body is not valid', HttpStatus.BAD_REQUEST);
+    return this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')

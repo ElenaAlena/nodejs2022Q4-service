@@ -9,7 +9,7 @@ import { Artist } from './interfaces/artist.interface';
 export class ArtistsService {
   constructor(private repository: RepositoryService) {}
 
-  async create(createArtistDto: CreateArtistDto): Promise<Artist> {
+  create(createArtistDto: CreateArtistDto): Artist {
     const newArtist = new ArtistEntity(createArtistDto);
     this.repository.addArtist(newArtist);
     return newArtist;

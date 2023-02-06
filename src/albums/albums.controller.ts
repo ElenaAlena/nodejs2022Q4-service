@@ -51,13 +51,6 @@ export class AlbumsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
-    if (
-      !updateAlbumDto.name &&
-      !updateAlbumDto.year &&
-      typeof updateAlbumDto.name !== 'string'
-    ) {
-      throw new HttpException('Album id is not valid', HttpStatus.BAD_REQUEST);
-    }
     return this.albumsService.update(id, updateAlbumDto);
   }
 

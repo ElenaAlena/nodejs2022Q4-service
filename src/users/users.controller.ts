@@ -17,7 +17,6 @@ import {
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './interfaces/user.interface';
-import { UserEntity } from './entities/user.entity';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 @Controller('user')
@@ -39,16 +38,14 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(): Promise<User[] | User> {
+  findAll(): User[] | User {
     return this.userService.find();
   }
 
   @Get(':id')
-  async findOne(
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<User | User[]> {
-    const user = await this.userService.find(id);
-    if (user) return new UserEntity(user as User);
+  findOne(@Param('id', new ParseUUIDPipe()) id: string): User | User[] {
+    const user = this.userService.find(id);
+    if (user) return user;
     throw new HttpException('This user does not exist', HttpStatus.NOT_FOUND);
   }
 

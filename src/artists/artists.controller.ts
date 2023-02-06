@@ -21,12 +21,8 @@ export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
-    if (createArtistDto.name && createArtistDto.grammy) {
-      const artist = this.artistsService.create(createArtistDto);
-      return artist;
-    }
-    throw new HttpException('Some fields are missing', HttpStatus.BAD_REQUEST);
+  async create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
+    return this.artistsService.create(createArtistDto);
   }
 
   @Get()
