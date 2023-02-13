@@ -2,8 +2,10 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import 'dotenv/config';
 import { useContainer } from 'class-validator';
+import { readFile } from 'node:fs/promises';
+import * as yaml from 'js-yaml';
 
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -13,13 +15,11 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  const config = new DocumentBuilder()
-    .setTitle('Home Library Service')
-    .setDescription('Home Library Service')
-    .setVersion('1.0.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document: any = yaml.load(
+    await readFile('./doc/api.yaml', { encoding: 'utf-8' }),
+  );
   SwaggerModule.setup('doc', app, document);
+
   await app.listen(PORT);
 }
 bootstrap();

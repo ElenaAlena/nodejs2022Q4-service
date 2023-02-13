@@ -31,7 +31,16 @@ export class TracksController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Track> {
+  async findOne(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ): Promise<Track> {
     const track = await this.tracksService.findOne(id);
     if (track) return track;
     throw new HttpException(
@@ -42,7 +51,14 @@ export class TracksController {
 
   @Put(':id')
   update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
     return this.tracksService.update(id, updateTrackDto);
@@ -50,7 +66,16 @@ export class TracksController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+  async remove(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ) {
     const isSuccess = await this.tracksService.remove(id);
     if (!isSuccess) {
       throw new HttpException(

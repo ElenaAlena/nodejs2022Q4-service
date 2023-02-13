@@ -35,7 +35,16 @@ export class AlbumsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Album> {
+  async findOne(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ): Promise<Album> {
     const album = await this.albumsService.findOne(id);
     if (!album) {
       throw new HttpException(
@@ -48,7 +57,14 @@ export class AlbumsController {
 
   @Put(':id')
   update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
     return this.albumsService.update(id, updateAlbumDto);
@@ -56,7 +72,16 @@ export class AlbumsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+  async remove(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ) {
     const isAlbumDel = await this.albumsService.remove(id);
     if (isAlbumDel) {
       throw new HttpException(
