@@ -1,36 +1,152 @@
-import { Injectable } from '@nestjs/common';
-import { RepositoryService } from 'src/repository/repositoty.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AlbumsService } from 'src/albums/albums.service';
+import { AlbumEntity } from 'src/albums/entities/album.entity';
+import { ArtistsService } from 'src/artists/artists.service';
+import { ArtistEntity } from 'src/artists/entities/artist.entity';
+import { TracksService } from 'src/tracks/tracks.service';
+import { Repository } from 'typeorm';
+import { FavoriteEntity } from './entities/favorites.entity';
 import { FavoritesResponse } from './interfaces/favorites.interfaces';
 
 @Injectable()
 export class FavoritesService {
-  constructor(private repository: RepositoryService) {}
+  constructor(
+    @InjectRepository(FavoriteEntity)
+    private favoritesRepository: Repository<FavoriteEntity>,
+    private albumsService: AlbumsService,
+    private tracksService: TracksService,
+    private artistsService: ArtistsService,
+  ) {}
 
   async getAll(): Promise<FavoritesResponse> {
-    return this.repository.getFavorites();
+    const favs = await this.favoritesRepository.findOne({
+      where: {},
+      relations: ['artists', 'albums', 'tracks'],
+    });
+
+    return { ...favs };
+  }
+
+  async getFav() {
+    let favs = await this.favoritesRepository.findOne({
+      where: {},
+    });
+    if (!favs) favs = new FavoriteEntity();
+    if (!favs.tracks) favs.tracks = [];
+    if (!favs.albums) favs.albums = [];
+    if (!favs.artists) favs.artists = [];
+    return favs;
   }
 
   async addTrack(id: string) {
-    this.repository.addTrackToFavorites(id);
+    const favs = await this.getFav();
+    const track = await this.tracksService.findOne(id);
+    if (track) {
+      favs.tracks.push(track);
+      await this.favoritesRepository.save(favs);
+      throw new HttpException(
+        'The track was successfully added to favourites',
+        HttpStatus.CREATED,
+      );
+    } else {
+      throw new HttpException(
+        'This track does not exist',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
   }
 
   async removeTrack(id: string) {
-    this.repository.deleteTrackFromFavorites(id);
+    const favs = await this.getFav();
+    const track = await this.tracksService.findOne(id);
+    if (track) {
+      const index = favs.tracks.findIndex((el) => el.id === id);
+      favs.tracks.splice(index, 1);
+      await this.favoritesRepository.save(favs);
+      throw new HttpException(
+        'This track was successfully deleted from favorites',
+        HttpStatus.NO_CONTENT,
+      );
+    } else {
+      throw new HttpException(
+        'This track is not in favorites',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   async addAlbum(id: string) {
-    this.repository.addAlbumToFavorites(id);
+    const favs = await this.getFav();
+    const album = await this.albumsService.findOne(id);
+    if (album) {
+      favs.albums.push(album as AlbumEntity);
+      await this.favoritesRepository.save(favs);
+      throw new HttpException(
+        'The track was successfully added to favorites',
+        HttpStatus.CREATED,
+      );
+    } else {
+      throw new HttpException(
+        'This track is not exist',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
   }
 
   async removeAlbum(id: string) {
-    this.repository.deleteAlbumFromFavorites(id);
+    const favs = await this.getFav();
+    const album = await this.albumsService.findOne(id);
+    if (album) {
+      const index = favs.albums.findIndex((el) => el.id === id);
+      favs.albums.splice(index, 1);
+      await this.favoritesRepository.save(favs);
+      throw new HttpException(
+        'This album was successfully deleted from favorites',
+        HttpStatus.NO_CONTENT,
+      );
+    } else {
+      throw new HttpException(
+        'This album is not in favorites',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   async addArtist(id: string) {
-    this.repository.addArtistToFavorites(id);
+    const favs = await this.getFav();
+    const artist = await this.artistsService.findOne(id);
+    if (artist) {
+      favs.artists.push(artist as ArtistEntity);
+      await this.favoritesRepository.save(favs);
+      throw new HttpException(
+        'The track was successfully added to favourites',
+        HttpStatus.CREATED,
+      );
+    } else {
+      throw new HttpException(
+        'This track does not exist',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
   }
 
   async removeArtist(id: string) {
-    this.repository.deleteArtistFromFavorites(id);
+    const favs = await this.getFav();
+    const artist = await this.artistsService.findOne(id);
+    if (artist) {
+      const index = favs.artists.findIndex((el) => el.id === id);
+      favs.artists.splice(index, 1);
+      await this.favoritesRepository.save(favs);
+      throw new HttpException(
+        'This artist was successfully deleted from favorites',
+        HttpStatus.NO_CONTENT,
+      );
+    } else {
+      throw new HttpException(
+        'This artist is not in favorites',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }
