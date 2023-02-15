@@ -21,17 +21,17 @@ export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
+  async create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
     if (createAlbumDto.name && createAlbumDto.year) {
-      const newAlbum = this.albumsService.create(createAlbumDto);
+      const newAlbum = await this.albumsService.create(createAlbumDto);
       return newAlbum;
     }
     throw new HttpException('Body is not correct', HttpStatus.BAD_REQUEST);
   }
 
   @Get()
-  findAll(): Promise<Album[]> {
-    return this.albumsService.findAll();
+  async findAll(): Promise<Album[]> {
+    return await this.albumsService.findAll();
   }
 
   @Get(':id')
@@ -56,7 +56,7 @@ export class AlbumsController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param(
       'id',
       new ParseUUIDPipe({
@@ -67,7 +67,7 @@ export class AlbumsController {
     id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
-    return this.albumsService.update(id, updateAlbumDto);
+    return await this.albumsService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')

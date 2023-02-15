@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RepositoryService } from 'src/repository/repositoty.service';
+import { InjectRepository } from '@nestjs/typeorm/dist';
+import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumEntity } from './entities/album.entity';
@@ -7,29 +8,25 @@ import { Album } from './interfaces/album.interface';
 
 @Injectable()
 export class AlbumsService {
-  constructor(private repository: RepositoryService) {}
+  constructor(
+    @InjectRepository(AlbumEntity)
+    private albumsRepository: Repository<AlbumEntity>,
+  ) {}
 
   async create(createAlbumDto: CreateAlbumDto): Promise<Album> {
-    const { artistId } = createAlbumDto;
-    if (artistId) {
-      const isArtist = this.repository.artists.find(
-        (artist) => artist.id === artistId,
-      );
-      if (!isArtist) {
-        throw new HttpException('Body is not correct', HttpStatus.BAD_REQUEST);
-      }
-    }
-    const newAlbum = new AlbumEntity(createAlbumDto);
-    this.repository.addAlbum(newAlbum);
-    return newAlbum;
+    const album = this.albumsRepository.create(createAlbumDto);
+    return this.albumsRepository.save(album);
   }
 
   async findAll(): Promise<Album[]> {
-    return this.repository.albums;
+    return this.albumsRepository.find({ loadRelationIds: true });
   }
 
   async findOne(id: string): Promise<Album> {
-    return this.repository.albums.find((album) => album.id === id);
+    return this.albumsRepository.findOne({
+      where: { id },
+      loadRelationIds: true,
+    });
   }
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto): Promise<Album> {
@@ -39,23 +36,15 @@ export class AlbumsService {
         'This album does not exist',
         HttpStatus.NOT_FOUND,
       );
-    const { artistId } = updateAlbumDto;
-    if (artistId) {
-      const isArtist = this.repository.artists.find(
-        (artist) => artist.id === artistId,
-      );
-      if (!isArtist) {
-        throw new HttpException('Body is not correct', HttpStatus.BAD_REQUEST);
-      }
-    }
+
     const updatedAlbum = { ...albumForUpdate, ...updateAlbumDto };
-    this.repository.updateAlbum(id, updatedAlbum);
+    await this.albumsRepository.save(updatedAlbum);
+
     return updatedAlbum;
   }
 
   async remove(id: string) {
-    const albumForDel = await this.findOne(id);
-    if (!!albumForDel) this.repository.deleteAlbum(id);
-    return !!albumForDel;
+    const result = await this.albumsRepository.delete({ id });
+    return result.affected ? result.raw : null;
   }
 }

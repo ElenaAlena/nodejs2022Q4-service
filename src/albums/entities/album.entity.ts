@@ -1,15 +1,33 @@
-import { v4 } from 'uuid';
-import { CreateAlbumDto } from '../dto/create-album.dto';
+import { Exclude } from 'class-transformer';
+import { ArtistEntity } from 'src/artists/entities/artist.entity';
+import { FavoriteEntity } from 'src/favorites/entities/favorites.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
+@Entity('albums')
 export class AlbumEntity {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column('text')
   name: string;
+
+  @Column('int')
   year: number;
+
+  @OneToOne(() => ArtistEntity, { onDelete: 'SET NULL', eager: true })
+  @JoinColumn()
   artistId: string | null;
-  constructor({ name, year, artistId = null }: CreateAlbumDto) {
-    this.id = v4();
-    this.name = name;
-    this.year = year;
-    this.artistId = artistId;
-  }
+
+  @ManyToOne(() => FavoriteEntity, (favorite) => favorite.artists, {
+    onDelete: 'CASCADE',
+  })
+  @Exclude()
+  favorite: FavoriteEntity;
 }
