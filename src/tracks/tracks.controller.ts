@@ -21,13 +21,13 @@ export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post()
-  create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
-    return this.tracksService.create(createTrackDto);
+  async create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
+    return await this.tracksService.create(createTrackDto);
   }
 
   @Get()
-  findAll(): Promise<Track[]> {
-    return this.tracksService.findAll();
+  async findAll(): Promise<Track[]> {
+    return await this.tracksService.findAll();
   }
 
   @Get(':id')
@@ -50,7 +50,7 @@ export class TracksController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param(
       'id',
       new ParseUUIDPipe({
@@ -61,7 +61,7 @@ export class TracksController {
     id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
-    return this.tracksService.update(id, updateTrackDto);
+    return await this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')

@@ -4,6 +4,7 @@ import { AlbumsService } from 'src/albums/albums.service';
 import { AlbumEntity } from 'src/albums/entities/album.entity';
 import { ArtistsService } from 'src/artists/artists.service';
 import { ArtistEntity } from 'src/artists/entities/artist.entity';
+import { TrackEntity } from 'src/tracks/entities/track.entity';
 import { TracksService } from 'src/tracks/tracks.service';
 import { Repository } from 'typeorm';
 import { FavoriteEntity } from './entities/favorites.entity';
@@ -43,7 +44,7 @@ export class FavoritesService {
     const favs = await this.getFav();
     const track = await this.tracksService.findOne(id);
     if (track) {
-      favs.tracks.push(track);
+      favs.tracks.push(track as TrackEntity);
       await this.favoritesRepository.save(favs);
       throw new HttpException(
         'The track was successfully added to favourites',

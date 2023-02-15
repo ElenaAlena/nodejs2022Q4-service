@@ -38,7 +38,7 @@ export class AlbumsService {
       );
 
     const updatedAlbum = { ...albumForUpdate, ...updateAlbumDto };
-    await this.albumsRepository.save(updatedAlbum);
+    await this.albumsRepository.update(id, updatedAlbum);
 
     return updatedAlbum;
   }
