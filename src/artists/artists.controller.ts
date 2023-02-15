@@ -26,8 +26,8 @@ export class ArtistsController {
   }
 
   @Get()
-  findAll() {
-    return this.artistsService.findAll();
+  async findAll(): Promise<Artist[]> {
+    return await this.artistsService.findAll();
   }
 
   @Get(':id')
@@ -52,7 +52,7 @@ export class ArtistsController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param(
       'id',
       new ParseUUIDPipe({
@@ -63,7 +63,7 @@ export class ArtistsController {
     id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<Artist> {
-    const artist = this.artistsService.update(id, updateArtistDto);
+    const artist = await this.artistsService.update(id, updateArtistDto);
     return artist;
   }
 
