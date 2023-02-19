@@ -17,4 +17,4 @@ import { FavoriteEntity } from './entities/favorites.entity';
     TypeOrmModule.forFeature([FavoriteEntity]),
   ],
 })
-export class FavouritesModule {}
+export class FavoritesModule {}

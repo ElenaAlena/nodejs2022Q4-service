@@ -4,8 +4,8 @@ import { AlbumsModule } from './albums/albums.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistsModule } from './artists/artists.module';
-import { typeOrmConfig } from './config/orm.config';
-import { FavouritesModule } from './favorites/favorites.module';
+import { typeOrmConfig } from './config/ormconfig';
+import { FavoritesModule } from './favorites/favorites.module';
 import { TracksModule } from './tracks/tracks.module';
 import { UsersModule } from './users/users.module';
 
@@ -15,7 +15,7 @@ import { UsersModule } from './users/users.module';
     TracksModule,
     ArtistsModule,
     AlbumsModule,
-    FavouritesModule,
+    FavoritesModule,
     TypeOrmModule.forRoot(typeOrmConfig),
   ],
   controllers: [AppController],

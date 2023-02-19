@@ -8,11 +8,7 @@ import { FavoriteEntity } from '../favorites/entities/favorites.entity';
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'postgres',
-  host: process.env.BD_PORT,
-  port: +process.env.BD_PORT,
-  username: process.env.BD_USER,
-  password: process.env.BD_PASSWORD,
-  database: process.env.BD_NAME,
+  url: process.env.DATABASE_URL,
   synchronize: false,
   entities: [
     AlbumEntity,
@@ -21,6 +17,8 @@ export const typeOrmConfig: DataSourceOptions = {
     UserEntity,
     FavoriteEntity,
   ],
+  migrations: [`./migrations/*.ts`],
+  migrationsRun: true,
 };
 
 export const dataSource: DataSource = new DataSource(typeOrmConfig);
