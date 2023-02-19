@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AlbumsService } from 'src/albums/albums.service';
-import { AlbumEntity } from 'src/albums/entities/album.entity';
-import { ArtistsService } from 'src/artists/artists.service';
-import { ArtistEntity } from 'src/artists/entities/artist.entity';
-import { TrackEntity } from 'src/tracks/entities/track.entity';
-import { TracksService } from 'src/tracks/tracks.service';
+import { AlbumsService } from '../albums/albums.service';
+import { AlbumEntity } from '../albums/entities/album.entity';
+import { ArtistsService } from '../artists/artists.service';
+import { ArtistEntity } from '../artists/entities/artist.entity';
+import { TrackEntity } from '../tracks/entities/track.entity';
+import { TracksService } from '../tracks/tracks.service';
 import { Repository } from 'typeorm';
 import { FavoriteEntity } from './entities/favorites.entity';
 import { FavoritesResponse } from './interfaces/favorites.interfaces';

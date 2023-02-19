@@ -17,7 +17,7 @@ export const typeOrmConfig: DataSourceOptions = {
     UserEntity,
     FavoriteEntity,
   ],
-  migrations: [`./migrations/*.ts`],
+  migrations: [__dirname + './src/migrations/*.ts'],
   migrationsRun: true,
 };
 

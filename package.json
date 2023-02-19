@@ -20,15 +20,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker:scan": "docker scan library",
-    "docker:scan:db": "docker scan postgresql",
+    "docker:scan:db": "docker scan postgres",
     "docker:build": "docker compose up -d --build",
     "docker:start": "docker compose start",
     "docker:stop": "docker compose stop",
-    "typeorm": "ts-node ./node_modules/typeorm/cli -f ./src/config/ormconfig.ts",
-    "migration:generate": "npm run typeorm migration:generate",
-    "migration:show": "npm run typeorm migration:show",
-    "migration:run": "npm run typeorm migration:run",
-    "migration:revert": "npm run typeorm migration:revert"
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/config/ormconfig.ts",
+    "typeorm:migration": "ts-node ./node_modules/typeorm/cli migration:run -d src/config/ormconfig.ts",
+    "typeorm:generate": "ts-node ./node_modules/typeorm/cli migration:generate ./src/migrations/update-post-table -d ./src/config/ormconfig.ts",
+    "typeorm:create": "ts-node ./node_modules/typeorm/cli migration:create ./src/migrations/update-post-table"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
-import { AlbumEntity } from 'src/albums/entities/album.entity';
-import { ArtistEntity } from 'src/artists/entities/artist.entity';
-import { FavoriteEntity } from 'src/favorites/entities/favorites.entity';
+import { AlbumEntity } from '../../albums/entities/album.entity';
+import { ArtistEntity } from '../../artists/entities/artist.entity';
+import { FavoriteEntity } from '../../favorites/entities/favorites.entity';
 import {
   Column,
   Entity,

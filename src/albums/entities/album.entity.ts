@@ -1,6 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { ArtistEntity } from 'src/artists/entities/artist.entity';
-import { FavoriteEntity } from 'src/favorites/entities/favorites.entity';
 import {
   Column,
   Entity,
@@ -9,6 +7,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ArtistEntity } from '../../artists/entities/artist.entity';
+import { FavoriteEntity } from '../../favorites/entities/favorites.entity';
 
 @Entity('albums')
 export class AlbumEntity {

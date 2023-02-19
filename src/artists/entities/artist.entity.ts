@@ -1,4 +1,4 @@
-import { FavoriteEntity } from 'src/favorites/entities/favorites.entity';
+import { FavoriteEntity } from '../../favorites/entities/favorites.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
 

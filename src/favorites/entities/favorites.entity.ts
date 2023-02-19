@@ -1,7 +1,7 @@
 import { Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AlbumEntity } from 'src/albums/entities/album.entity';
-import { ArtistEntity } from 'src/artists/entities/artist.entity';
-import { TrackEntity } from 'src/tracks/entities/track.entity';
+import { AlbumEntity } from '../../albums/entities/album.entity';
+import { ArtistEntity } from '../../artists/entities/artist.entity';
+import { TrackEntity } from '../../tracks/entities/track.entity';
 
 @Entity('favorites')
 export class FavoriteEntity {
