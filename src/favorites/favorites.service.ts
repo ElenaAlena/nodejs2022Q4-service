@@ -35,17 +35,16 @@ export class FavoritesService {
 
   async getAll(): Promise<FavoritesResponse> {
     const favs = await this.getFav();
-    return {
-      artists: favs.artists.map((el) =>
-        favs.artists.find((artist) => artist.id === el.id),
+    favs.albums.forEach(
+      (a) => (a.artistId = (a.artistId as any as ArtistEntity)?.id ?? null),
+    );
+    favs.tracks.forEach(
+      (t) => (
+        (t.artistId = (t.artistId as any as ArtistEntity)?.id ?? null),
+        (t.albumId = (t.albumId as any as AlbumEntity)?.id ?? null)
       ),
-      albums: favs.albums.map((el) =>
-        favs.albums.find((album) => album.id === el.id),
-      ),
-      tracks: favs.tracks.map((el) =>
-        favs.tracks.find((album) => album.id === el.id),
-      ),
-    };
+    );
+    return favs;
   }
 
   async getFav() {

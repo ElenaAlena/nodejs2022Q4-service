@@ -20,4 +20,3 @@ export const typeOrmConfig: DataSourceOptions = {
   migrationsRun: true,
   synchronize: true,
 };
-
