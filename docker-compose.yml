@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: "app"
+    container_name: app
     image: alenaelena/app
     build: 
       context: .
@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     networks:
-      - postgres
+      - postgres-net
     depends_on:
         postgres:  
           condition: service_started 
@@ -24,7 +24,7 @@ services:
     
     
   postgres:
-    container_name: "postgres"
+    container_name: postgres
     image: alenaelena/postgres
     build: 
       context: .
@@ -35,21 +35,21 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       PGDATA:  /var/lib/postgresql/data/pgdata
-      POSTGRES_HOST_AUTH_METHOD: "trust"
+      #POSTGRES_HOST_AUTH_METHOD: "trust"
     networks:
-      - postgres
+      - postgres-net
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"    
+      - ${POSTGRES_PORT}:${POSTGRES_PORT} 
       
 volumes:
   pgdata:
 
 networks:
-  postgres:
+  postgres-net:
     

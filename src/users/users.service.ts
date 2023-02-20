@@ -11,7 +11,8 @@ import User from './interfaces/user.interface';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserEntity) private usersRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
   ) {}
 
   async create(user: CreateUserDto): Promise<User> {

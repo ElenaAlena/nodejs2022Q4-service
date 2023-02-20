@@ -1,4 +1,4 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 import 'dotenv/config';
 import { AlbumEntity } from '../albums/entities/album.entity';
 import { TrackEntity } from '../tracks/entities/track.entity';
@@ -9,7 +9,6 @@ import { FavoriteEntity } from '../favorites/entities/favorites.entity';
 export const typeOrmConfig: DataSourceOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  synchronize: false,
   entities: [
     AlbumEntity,
     TrackEntity,
@@ -19,6 +18,6 @@ export const typeOrmConfig: DataSourceOptions = {
   ],
   migrations: [__dirname + './src/migrations/*.ts'],
   migrationsRun: true,
+  synchronize: true,
 };
 
-export const dataSource: DataSource = new DataSource(typeOrmConfig);

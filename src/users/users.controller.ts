@@ -38,7 +38,7 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(): Promise<User[] | User> {
+  async findAll(): Promise<User[]> {
     return await this.userService.findAll();
   }
 
@@ -52,7 +52,7 @@ export class UserController {
       }),
     )
     id: string,
-  ): Promise<User | User[]> {
+  ): Promise<User> {
     const user = await this.userService.findOne(id);
     if (user) return user;
     throw new HttpException('This user does not exist', HttpStatus.NOT_FOUND);

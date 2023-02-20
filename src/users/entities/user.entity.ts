@@ -33,6 +33,7 @@ export class UserEntity {
   @UpdateDateColumn(date)
   updatedAt: number;
 
+  @Column()
   @Exclude()
   password: string;
 }

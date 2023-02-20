@@ -14,16 +14,16 @@ export class ArtistsService {
   ) {}
 
   async create(createArtistDto: CreateArtistDto): Promise<Artist> {
-    const artist = await this.artistsRepository.create(createArtistDto);
+    const artist = this.artistsRepository.create(createArtistDto);
     return this.artistsRepository.save(artist);
   }
 
   async findAll(): Promise<Artist[]> {
-    return this.artistsRepository.find();
+    return await this.artistsRepository.find();
   }
 
   async findOne(id: string): Promise<Artist> {
-    return this.artistsRepository.findOne({ where: { id } });
+    return await this.artistsRepository.findOne({ where: { id } });
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto): Promise<Artist> {

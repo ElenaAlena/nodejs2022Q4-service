@@ -12,32 +12,49 @@ import { FavoritesResponse } from './interfaces/favorites.interfaces';
 
 @Injectable()
 export class FavoritesService {
+  private _id: string;
   constructor(
     @InjectRepository(FavoriteEntity)
     private favoritesRepository: Repository<FavoriteEntity>,
     private albumsService: AlbumsService,
     private tracksService: TracksService,
     private artistsService: ArtistsService,
-  ) {}
+  ) {
+    this.init();
+  }
+
+  async init(): Promise<void> {
+    const record = await this.favoritesRepository.find();
+    if (record.length) {
+      this._id = record[0].id;
+    } else {
+      const favorite = this.favoritesRepository.create();
+      await this.favoritesRepository.save(favorite);
+    }
+  }
 
   async getAll(): Promise<FavoritesResponse> {
+    const favs = await this.getFav();
+    return {
+      artists: favs.artists.map((el) =>
+        favs.artists.find((artist) => artist.id === el.id),
+      ),
+      albums: favs.albums.map((el) =>
+        favs.albums.find((album) => album.id === el.id),
+      ),
+      tracks: favs.tracks.map((el) =>
+        favs.tracks.find((album) => album.id === el.id),
+      ),
+    };
+  }
+
+  async getFav() {
     const favs = await this.favoritesRepository.findOne({
-      where: {},
+      where: { id: this._id },
       relations: ['artists', 'albums', 'tracks'],
     });
 
     return { ...favs };
-  }
-
-  async getFav() {
-    let favs = await this.favoritesRepository.findOne({
-      where: {},
-    });
-    if (!favs) favs = new FavoriteEntity();
-    if (!favs.tracks) favs.tracks = [];
-    if (!favs.albums) favs.albums = [];
-    if (!favs.artists) favs.artists = [];
-    return favs;
   }
 
   async addTrack(id: string) {
@@ -84,12 +101,12 @@ export class FavoritesService {
       favs.albums.push(album as AlbumEntity);
       await this.favoritesRepository.save(favs);
       throw new HttpException(
-        'The track was successfully added to favorites',
+        'The Album was successfully added to favorites',
         HttpStatus.CREATED,
       );
     } else {
       throw new HttpException(
-        'This track is not exist',
+        'This Album is not exist',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
@@ -121,12 +138,12 @@ export class FavoritesService {
       favs.artists.push(artist as ArtistEntity);
       await this.favoritesRepository.save(favs);
       throw new HttpException(
-        'The track was successfully added to favourites',
+        'The Artist was successfully added to favourites',
         HttpStatus.CREATED,
       );
     } else {
       throw new HttpException(
-        'This track does not exist',
+        'This Artist does not exist',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
