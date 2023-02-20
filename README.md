@@ -17,11 +17,36 @@ git clone {repository URL}
 npm install
 ```
 
-## Running application
+## Set env variables
 
 ```
-npm start
+Copy .env.example to .env
 ```
+
+## Build and run your app with Compose.
+
+```
+npm run docker:build
+```
+
+## Scan app image
+
+```
+npm run docker:scan:app
+```
+
+## Scan postgreql image
+
+```
+npm run docker:scan:db
+```
+
+## Run migrations
+
+```
+npm run migration:run
+```
+
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
