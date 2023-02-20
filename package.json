@@ -27,7 +27,7 @@
     "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f src/config/ormconfig-migrations.ts",
     "typeorm:migration": "ts-node ./node_modules/typeorm/cli migration:run -d src/config/ormconfig-migrations.ts",
     "typeorm:generate": "ts-node ./node_modules/typeorm/cli migration:generate ./src/migrations/update-post-table -d src/config/ormconfig-migrations.ts",
-    "typeorm:create": "ts-node ./node_modules/typeorm/cli migration:create ./src/migrations/update-post-table",
+    "typeorm:create": "ts-node ./node_modules/typeorm/cli migration:create ./src/migrations/updates",
     "resetDB": "npm run typeorm:cli -- schema:drop && npm run typeorm:cli -- schema:sync"
   },
   "dependencies": {
