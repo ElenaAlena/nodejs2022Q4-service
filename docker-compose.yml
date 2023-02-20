@@ -46,10 +46,12 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT} 
+    command: ["postgres", "-c", "logging_collector=on", "-c", "log_statement=all"]
       
 volumes:
   pgdata:
 
 networks:
   postgres-net:
+    driver: bridge
     
