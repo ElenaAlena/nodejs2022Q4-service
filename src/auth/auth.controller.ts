@@ -21,7 +21,9 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
-  refresh(@Body() { refreshToken }): Promise<LoginResponse> {
+  refresh(
+    @Body() { refreshToken }: { refreshToken: string },
+  ): Promise<LoginResponse> {
     return this.authService.refresh(refreshToken);
   }
 }
