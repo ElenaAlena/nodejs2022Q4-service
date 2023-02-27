@@ -17,11 +17,14 @@ async function bootstrap() {
     logger: false,
   });
   process
-    .on('unhandledRejection', () => {
-      app.get(LoggerService).error('Unhandled rejection');
+    .on('unhandledRejection', (reason) => {
+      app.get(LoggerService).error(`Unhandled rejection. Reason: ${reason}`);
     })
-    .on('uncaughtException', () => {
-      app.get(LoggerService).error('Uncaught exception');
+    .on('uncaughtException', (err, origin) => {
+      app
+        .get(LoggerService)
+        .error(`Uncaught exception: ${err}. Origin: ${origin}`);
+      process.exit(1);
     });
   app.useLogger(app.get(LoggerService));
   app.useGlobalPipes(new ValidationPipe());
