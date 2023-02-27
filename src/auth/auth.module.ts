@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import 'dotenv/config';
 import { JwtStrategy } from './jwt.strategy';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthController } from './auth.controller';

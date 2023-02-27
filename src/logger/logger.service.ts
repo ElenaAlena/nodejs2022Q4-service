@@ -2,6 +2,7 @@ import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
 import { createWriteStream, existsSync, mkdirSync, WriteStream } from 'fs';
 import { stat } from 'fs/promises';
 import { resolve } from 'path';
+import 'dotenv/config';
 
 const LOG_LEVEL: Record<number, LogLevel> = {
   0: 'debug',
@@ -24,7 +25,7 @@ export class LoggerService extends ConsoleLogger {
     });
     this._logsDir = resolve(process.env.LOG_PATH);
     this._createDir();
-    this._logFileName = `log_${process.env.LOG_LEVEL}.txt`;
+    this._logFileName = 'log_0.txt';
     this._writeStream = createWriteStream(
       `${this._logsDir}/${this._logFileName}`,
       { flags: 'as' },

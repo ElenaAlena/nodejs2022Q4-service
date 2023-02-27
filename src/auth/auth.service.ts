@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { hash, compare } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import 'dotenv/config';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginResponse } from './loginResponseType';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -52,15 +53,18 @@ export class AuthService {
   }
 
   async refresh(refreshToken: string): Promise<LoginResponse> {
-    const tokenData = this.jwtService.verify(refreshToken);
-    const user: UserEntity = await this.usersRepository.findOne({
-      where: { id: tokenData.id },
-    });
-    const tokenExpired = tokenData.exp - Date.now();
-    if (!user || tokenExpired) {
-      throw new ForbiddenException('Authentification failed');
+    try {
+      const tokenData = this.jwtService.verify(refreshToken);
+      const user: UserEntity = await this.usersRepository.findOne({
+        where: { id: tokenData.userId },
+      });
+      if (!user) {
+        throw new ForbiddenException('The refreshToken is invalid');
+      }
+      const payload = { login: tokenData.login, userId: tokenData.id };
+      return this.getTokens(payload);
+    } catch (e) {
+      throw new ForbiddenException(e.message);
     }
-    const payload = { login: tokenData.login, userId: tokenData.id };
-    return this.getTokens(payload);
   }
 }
