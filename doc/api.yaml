@@ -211,10 +211,10 @@ paths:
       responses:
         200:
           description: Successful updated
-        400:
-          description: Bad request
         401:
-          $ref: '#/components/responses/UnauthorizedError'
+          description: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: 'Refresh token is invalid or expired'
   /user:
     get:
       tags:
