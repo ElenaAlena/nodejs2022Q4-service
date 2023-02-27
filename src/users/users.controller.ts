@@ -38,20 +38,36 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll(): User[] | User {
-    return this.userService.find();
+  async findAll(): Promise<User[]> {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string): User | User[] {
-    const user = this.userService.find(id);
+  async findOne(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ): Promise<User> {
+    const user = await this.userService.findOne(id);
     if (user) return user;
     throw new HttpException('This user does not exist', HttpStatus.NOT_FOUND);
   }
 
   @Put(':id')
   async update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
     @Body() updateUser: UpdateUserPasswordDto,
   ): Promise<User> {
     const userUpdated = await this.userService.update(id, updateUser);
@@ -60,7 +76,16 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+  async remove(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ) {
     const userToDelete = await this.userService.remove(id);
     if (!userToDelete) {
       throw new HttpException('User is not exist', HttpStatus.NOT_FOUND);

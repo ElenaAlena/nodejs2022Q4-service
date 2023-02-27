@@ -1,0 +1,57 @@
+services:
+  app:
+    container_name: app
+    image: alenaelena/app
+    build: 
+      context: .
+      dockerfile:  docker/app/Dockerfile
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - postgres-net
+    depends_on:
+        postgres:  
+          condition: service_started 
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+    
+    
+  postgres:
+    container_name: postgres
+    image: alenaelena/postgres
+    build: 
+      context: .
+      dockerfile: ./docker/bd/Dockerfile
+    restart: always
+    expose:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA:  /var/lib/postgresql/data/pgdata
+      #POSTGRES_HOST_AUTH_METHOD: "trust"
+    networks:
+      - postgres-net
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT} 
+    command: ["postgres", "-c", "logging_collector=on", "-c", "log_statement=all"]
+      
+volumes:
+  pgdata:
+
+networks:
+  postgres-net:
+    driver: bridge
+    

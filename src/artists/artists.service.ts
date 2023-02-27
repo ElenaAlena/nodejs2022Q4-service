@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RepositoryService } from 'src/repository/repositoty.service';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
@@ -7,41 +8,38 @@ import { Artist } from './interfaces/artist.interface';
 
 @Injectable()
 export class ArtistsService {
-  constructor(private repository: RepositoryService) {}
+  constructor(
+    @InjectRepository(ArtistEntity)
+    private artistsRepository: Repository<ArtistEntity>,
+  ) {}
 
-  create(createArtistDto: CreateArtistDto): Artist {
-    const newArtist = new ArtistEntity(createArtistDto);
-    this.repository.addArtist(newArtist);
-    return newArtist;
+  async create(createArtistDto: CreateArtistDto): Promise<Artist> {
+    const artist = this.artistsRepository.create(createArtistDto);
+    return this.artistsRepository.save(artist);
   }
 
   async findAll(): Promise<Artist[]> {
-    return this.repository.artists;
+    return await this.artistsRepository.find();
   }
 
   async findOne(id: string): Promise<Artist> {
-    return this.repository.artists.find((artist) => artist.id === id);
+    return await this.artistsRepository.findOne({ where: { id } });
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto): Promise<Artist> {
-    const artistToUpdate = this.repository.artists.find(
-      (artist) => artist.id === id,
-    );
+    const artistToUpdate = await this.findOne(id);
     if (!artistToUpdate)
       throw new HttpException(
         'The artist with such id is not exist',
         HttpStatus.NOT_FOUND,
       );
     const updatedArtist = { ...artistToUpdate, ...updateArtistDto };
-    this.repository.updateArtist(id, updatedArtist);
-    return updatedArtist;
+    await this.artistsRepository.update(id, updatedArtist);
+    return await this.findOne(id);
   }
 
   async remove(id: string) {
-    const result = !!this.repository.artists.find((artist) => artist.id === id);
-    if (result) {
-      this.repository.deleteArtist(id);
-    }
-    return result;
+    const result = await this.artistsRepository.delete({ id });
+    return result.affected ? result.raw : null;
   }
 }

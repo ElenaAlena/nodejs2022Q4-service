@@ -21,21 +21,30 @@ export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
+  async create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
     if (createAlbumDto.name && createAlbumDto.year) {
-      const newAlbum = this.albumsService.create(createAlbumDto);
+      const newAlbum = await this.albumsService.create(createAlbumDto);
       return newAlbum;
     }
     throw new HttpException('Body is not correct', HttpStatus.BAD_REQUEST);
   }
 
   @Get()
-  findAll(): Promise<Album[]> {
-    return this.albumsService.findAll();
+  async findAll(): Promise<Album[]> {
+    return await this.albumsService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Album> {
+  async findOne(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ): Promise<Album> {
     const album = await this.albumsService.findOne(id);
     if (!album) {
       throw new HttpException(
@@ -47,16 +56,32 @@ export class AlbumsController {
   }
 
   @Put(':id')
-  update(
-    @Param('id', new ParseUUIDPipe()) id: string,
+  async update(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
-    return this.albumsService.update(id, updateAlbumDto);
+    return await this.albumsService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+  async remove(
+    @Param(
+      'id',
+      new ParseUUIDPipe({
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        version: '4',
+      }),
+    )
+    id: string,
+  ) {
     const isAlbumDel = await this.albumsService.remove(id);
     if (isAlbumDel) {
       throw new HttpException(
