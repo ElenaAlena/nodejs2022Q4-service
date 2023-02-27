@@ -29,6 +29,12 @@ Copy .env.example to .env
 npm run docker:build
 ```
 
+## For clean log folder
+
+```
+npm run cleanLog
+```
+
 ## Scan app image
 
 ```
@@ -58,18 +64,6 @@ Also you can import OpenAPI file from doc folder to https://editor-next.swagger.
 
 After application running open new terminal and enter:
 
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
 To run all test with authorization
 
 ```
@@ -92,8 +86,3 @@ npm run lint
 npm run format
 ```
 
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
