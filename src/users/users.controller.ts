@@ -12,14 +12,17 @@ import {
   HttpStatus,
   ClassSerializerInterceptor,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './interfaces/user.interface';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('user')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
